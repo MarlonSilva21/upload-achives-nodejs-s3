@@ -18,10 +18,11 @@ const PostSchema = new mongoose.Schema({
     },
 });
 
+//checking if i'm using bucket s3 so i can erase the data directly in the bucket
 PostSchema.pre('remove', function (){
     if(process.env.STORAGE_TYPE === 's3'){
         return s3.deleteObject({
-            Bucket: 'upload-img-with-nodejs',
+            Bucket: process.env.NAME_BUCKET,
             Key: this.key,
         }).promise()
     }
@@ -31,6 +32,7 @@ PostSchema.pre('remove', function (){
     }
 });
 
+//using mongoose middleware to check if the URL is empty and fill it in before persisting in db
 PostSchema.pre('save', function (){
     if(!this.url){
         this.url = `${process.env.APP_URL}/files/${this.key}`
