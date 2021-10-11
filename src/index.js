@@ -4,6 +4,7 @@ const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const path = require('path');
+const cors = require('cors');
 
 const app = express();
 
@@ -14,6 +15,7 @@ mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
 });
 
+app.use(cors());
 app.use(express.json()); //for the application to be able to handle the message body coming in JSON format
 app.use(express.urlencoded({ extended:  true }));  //for the application to handle requests in the URL Encoded pattern
 app.use(morgan('dev')) //requisition log lib
